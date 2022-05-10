@@ -1,5 +1,7 @@
 //Book Class: Represents a book
 //instiated a book object each time we create a bookk
+//adding static key word allows you to direclty call a method with out having to instiantiate the class of that method first
+
 class Book {
   constructor(title, author, isbn) {
     this.title = title;
@@ -13,21 +15,7 @@ class UI {
   static displayBooks() {
     //static keyword
     //makes method static // don't have to instantiate
-    const StoredBooks = [
-      {
-        title: 'Book One',
-        author: 'John Doe',
-        isbn: '3434434',
-      },
-      {
-        title: 'Book Two',
-        author: 'Jane Doe',
-        isbn: '45545',
-      },
-    ];
-
-    const books = StoredBooks;
-    console.log(StoredBooks);
+    const books = Store.getBooks();
 
     //loop through all books in the array and call method add book to list
     books.forEach((book) => {
@@ -84,6 +72,40 @@ class UI {
 }
 
 //Store Class: Handles Storage / local storage in browser
+//to deal with storage of our data/ books
+class Store {
+  static getBooks() {
+    let books;
+    if (localStorage.getItem('books') === null) {
+      //if there is no item of books in local storage
+      books = [];
+    } else {
+      books = JSON.parse(localStorage.getItem('books'));
+      //will be stored as a string so need to do json.parse
+    }
+    return books;
+    //return whatever is in books
+  }
+
+  static addBook(book) {
+    const books = Store.getBooks();
+    //getting the books in local storage
+    books.push(book);
+    //adding on new book
+    localStorage.setItem('books', JSON.stringify(books));
+  }
+
+  static removeBook(isbn) {
+    const books = Store.getBooks();
+    books.forEach((book, index) => {
+      if (book.isbn === isbn) {
+        books.splice(index, 1);
+        //splicing at that books index, and remove 1 book
+      }
+    });
+    localStorage.setItem('books', JSON.stringify(books));
+  }
+}
 
 //Event: Display Books
 document.addEventListener('DOMContentLoaded', UI.displayBooks);
@@ -108,8 +130,11 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
     UI.addBookToList(book);
     //passing book we created in event through UI method
 
+    //add Book to Storage
+    Store.addBook(book);
+
     //show success alert
-    UI.showAlert('Success', 'success');
+    UI.showAlert('Book added', 'success');
 
     //clear fileds
     UI.clearFields();
@@ -120,4 +145,7 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
 //use event propigation to target single book
 document.querySelector('#book-list').addEventListener('click', (e) => {
   UI.deleteBook(e.target);
+
+  //show remove success message
+  UI.showAlert('Book removed', 'success');
 });
