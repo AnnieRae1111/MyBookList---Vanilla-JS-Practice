@@ -144,7 +144,12 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
 //Event: Remove Book
 //use event propigation to target single book
 document.querySelector('#book-list').addEventListener('click', (e) => {
+  //Remove book from UI
   UI.deleteBook(e.target);
+
+  //Remove book from storage
+  Store.removeBook(e.target.parentElement.previousElementSibling.textContext);
+  //targeting the ISBN number ^^
 
   //show remove success message
   UI.showAlert('Book removed', 'success');
