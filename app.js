@@ -69,6 +69,10 @@ class UI {
     //parent element = container
     const form = document.querySelector('#book-form');
     container.insertBefore(div, form);
+    setTimeout(() => {
+      document.querySelector('.alert').remove();
+      //remove anything that has the class of alert
+    }, 3000);
     //insert div before form that we selected above
   }
 
