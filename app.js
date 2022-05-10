@@ -108,6 +108,10 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
     UI.addBookToList(book);
     //passing book we created in event through UI method
 
+    //show success alert
+    UI.showAlert('Success', 'success');
+
+    //clear fileds
     UI.clearFields();
   }
 });
